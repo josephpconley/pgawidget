@@ -19,22 +19,18 @@ import java.util.ArrayList;
  * Date: 7/20/2014
  */
 public class ListViewFactory implements RemoteViewsService.RemoteViewsFactory {
-    private static ArrayList<String> items = new ArrayList();
+    private static ArrayList<JSONObject> items = new ArrayList();
     private Context ctxt = null;
-    private int appWidgetId;
 
     public ListViewFactory(Context ctxt, Intent intent) {
         this.ctxt = ctxt;
-        appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+//        appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
     @Override
     public void onCreate() {
         Log.w("JOE", "onCreate");
-//        for(int i = 0; i < 100; i++){
-//            items.add("Item " + i);
-//        }
-        new GetScoresTask().execute("http://www.swingstats.com/majors/leaderboardPicks?id=15&random=1");
+        new GetScoresTask().execute("http://www.swingstats.com/pga");
     }
 
     class GetScoresTask extends AsyncTask<String, Void, String> {
@@ -47,9 +43,16 @@ public class ListViewFactory implements RemoteViewsService.RemoteViewsFactory {
         protected void onPostExecute(String res){
             try {
                 JSONObject resJSON = new JSONObject(res);
-                JSONArray made = resJSON.getJSONArray("made");
-                for(int i = 0; i < made.length(); i++){
-                    items.add(made.getJSONObject(i).getString("proName"));
+                JSONArray players = resJSON.getJSONArray("players");
+
+                items.clear();
+
+                //set header
+//                items.add(new JSONObject(resJSON, new String[]{"name", "course"}));
+
+                //set players
+                for(int i = 0; i < players.length(); i++){
+                    items.add(players.getJSONObject(i));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -69,18 +72,20 @@ public class ListViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews row=new RemoteViews(ctxt.getPackageName(), R.layout.row);
+        JSONObject player = items.get(position);
+        RemoteViews row = null;
 
-        row.setTextViewText(android.R.id.text1, items.get(position));
+        try {
+            row = new RemoteViews(ctxt.getPackageName(), R.layout.row);
+            row.setTextViewText(R.id.position, player.getString("position"));
+            row.setTextViewText(R.id.name, player.getString("name"));
+            row.setTextViewText(R.id.total, player.getString("total"));
+            row.setTextViewText(R.id.thru, player.getString("thru"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        Intent i=new Intent();
-        Bundle extras=new Bundle();
-
-        extras.putString(WidgetProvider.EXTRA_WORD, items.get(position));
-        i.putExtras(extras);
-        row.setOnClickFillInIntent(android.R.id.text1, i);
-
-        return(row);
+        return row;
     }
 
     @Override
