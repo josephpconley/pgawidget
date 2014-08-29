@@ -4,6 +4,12 @@
                android:layout_height="match_parent"
                android:orientation="vertical"
                android:background="@android:color/background_dark">
+    <Button xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/refresh"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:text="Refresh"
+            />
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/golfers"
               android:layout_width="match_parent"
@@ -11,4 +17,13 @@
               android:layout_marginTop="3dp"
               android:layout_marginLeft="3dp"
     />
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/empty_view"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:text="Loading..."
+              android:textSize="20sp" />
 </LinearLayout>

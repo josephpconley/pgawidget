@@ -7,5 +7,4 @@ import android.app.Activity;
  * Date: 7/20/2014
  */
 public class MyActivity extends Activity {
-
 }

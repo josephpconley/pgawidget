@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -20,44 +19,17 @@ import java.util.ArrayList;
  */
 public class ListViewFactory implements RemoteViewsService.RemoteViewsFactory {
     private static ArrayList<JSONObject> items = new ArrayList();
-    private Context ctxt = null;
+    private Context context = null;
+    private int appWidgetId;
 
     public ListViewFactory(Context ctxt, Intent intent) {
-        this.ctxt = ctxt;
-//        appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        this.context = ctxt;
+        appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
     @Override
     public void onCreate() {
         Log.w("JOE", "onCreate");
-        new GetScoresTask().execute("http://www.swingstats.com/pga");
-    }
-
-    class GetScoresTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... uri) {
-            return HTTP.get(uri[0]);
-        }
-
-        protected void onPostExecute(String res){
-            try {
-                JSONObject resJSON = new JSONObject(res);
-                JSONArray players = resJSON.getJSONArray("players");
-
-                items.clear();
-
-                //set header
-//                items.add(new JSONObject(resJSON, new String[]{"name", "course"}));
-
-                //set players
-                for(int i = 0; i < players.length(); i++){
-                    items.add(players.getJSONObject(i));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -67,6 +39,7 @@ public class ListViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
+        Log.w("JOE", "onCount");
         return(items.size());
     }
 
@@ -76,7 +49,7 @@ public class ListViewFactory implements RemoteViewsService.RemoteViewsFactory {
         RemoteViews row = null;
 
         try {
-            row = new RemoteViews(ctxt.getPackageName(), R.layout.row);
+            row = new RemoteViews(context.getPackageName(), R.layout.row);
             row.setTextViewText(R.id.position, player.getString("position"));
             row.setTextViewText(R.id.name, player.getString("name"));
             row.setTextViewText(R.id.total, player.getString("total"));
@@ -110,6 +83,25 @@ public class ListViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
-        // no-op
+        Log.w("JOE", "onDataSetChanged");
+
+        String res = HTTP.get("http://www.swingstats.com/pga");
+        try {
+            JSONObject resJSON = new JSONObject(res);
+            JSONArray players = resJSON.getJSONArray("players");
+
+            items.clear();
+
+            //set header
+//                items.add(new JSONObject(resJSON, new String[]{"name", "course"}));
+
+            //set players
+            for(int i = 0; i < players.length(); i++){
+                items.add(players.getJSONObject(i));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

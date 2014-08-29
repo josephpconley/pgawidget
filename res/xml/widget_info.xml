@@ -1,7 +1,7 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="294dp"
     android:minHeight="294dp"
-    android:updatePeriodMillis="14400000"
+    android:updatePeriodMillis="3600000"
     android:initialLayout="@layout/widget"
     android:autoAdvanceViewId="@+id/golfers"
     android:resizeMode="vertical|horizontal"
