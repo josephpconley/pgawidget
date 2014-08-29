@@ -1,4 +1,4 @@
-package com.swingstats.pga;
+package com.josephpconley.pga;
 
 import android.app.Activity;
 

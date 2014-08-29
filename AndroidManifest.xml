@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest android:versionCode="1"
           android:versionName="1.0"
-          package="com.swingstats.pga"
+          package="com.josephpconley.pga"
           xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="14"/>
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,7 +21,7 @@
             <meta-data android:name="android.appwidget.provider"
                        android:resource="@xml/widget_info" />
         </receiver>
-        <service android:name="WidgetService"
+        <service android:name=".WidgetPlayersService"
                  android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 </manifest>

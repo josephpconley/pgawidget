@@ -1,4 +1,4 @@
-package com.swingstats.pga;
+package com.josephpconley.pga;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -6,10 +6,10 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.RemoteViewsService;
+import org.json.JSONObject;
 
 /**
  * User: jconley
@@ -20,14 +20,14 @@ public class WidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int i=0; i<appWidgetIds.length; i++) {
-            Intent svcIntent = new Intent(context, WidgetService.class);
-
-            svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-            svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            Intent players = new Intent(context, WidgetPlayersService.class);
 
             RemoteViews widget = new RemoteViews(context.getPackageName(), R.layout.widget);
-            widget.setRemoteAdapter(R.id.golfers, svcIntent);
+            widget.setRemoteAdapter(R.id.golfers, players);
             widget.setEmptyView(R.id.golfers, R.id.empty_view);
+
+            //metadata
+//            new GetTournamentMeta(widget).execute();
 
             //manual refresh
             Intent clickIntent = new Intent(context, WidgetProvider.class);
@@ -55,8 +55,31 @@ public class WidgetProvider extends AppWidgetProvider {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.golfers);
-
-//        Log.w("JOE", "onDataSetChanged");
-//        new GetScoresTask(AppWidgetManager.getInstance(ctxt), ctxt).execute();
     }
+
+//    class GetTournamentMeta extends AsyncTask<Void, Void, String> {
+//
+//        private RemoteViews rv;
+//
+//        public GetTournamentMeta(RemoteViews rv){
+//            this.rv = rv;
+//        }
+//
+//        @Override
+//        protected String doInBackground(Void... uri) {
+//            return HTTP.get("http://www.swingstats.com/pga");
+//        }
+//
+//        protected void onPostExecute(String res){
+//            try {
+//                JSONObject resJSON = new JSONObject(res);
+//                String name = resJSON.getString("name");
+//                String course = resJSON.getString("course");
+//
+//                rv.setTextViewText(R.id.title, name + "\r" + course);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }

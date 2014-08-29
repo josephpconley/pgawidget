@@ -4,12 +4,26 @@
                android:layout_height="match_parent"
                android:orientation="vertical"
                android:background="@android:color/background_dark">
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/refresh"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:text="Refresh"
-            />
+    <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal">
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/title"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:minWidth="45dip"
+                  android:paddingLeft="6dip"
+                  android:textAppearance="?android:attr/textAppearanceLarge"
+                  android:text="PGA Tour"
+                />
+        <Button xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/refresh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Refresh"
+                />
+    </LinearLayout >
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/golfers"
               android:layout_width="match_parent"
